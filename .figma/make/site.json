@@ -1,0 +1,10 @@
+{
+  "description": "This web application allows users to create and customize course pages with a main image and logo, enhancing the visual appeal and branding for educational content.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

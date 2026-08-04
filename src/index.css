@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+@font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('https://static.figma.com/font/CormorantGaramond_wght__1') format('woff2'); }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('https://static.figma.com/font/Manrope_wght__1') format('woff2'); }
+
+@theme { --font-sans: 'Manrope', sans-serif; --font-serif: 'Cormorant Garamond', Georgia, serif; }
+
+:root { --ink:#4A3728; --brown:#7D5E42; --gold:#B89060; --paper:#EFE9E2; --cream:#FAF7F4; --line:#D9D0C6; --sketch:#C8BEB4; }
+html { scroll-behavior:smooth; }
+body { background:var(--paper); color:var(--ink); }
+::selection { background:#b8906050; }
