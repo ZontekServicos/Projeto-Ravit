@@ -15,8 +15,13 @@ export function Methodology() {
         </RevealTitle>
 
         <div className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-3">
-          {methodology.map((step) => (
-            <Reveal as="div" key={step.number}>
+          {methodology.map((step, i) => (
+            <Reveal
+              as="div"
+              key={step.number}
+              x={i === 0 ? -28 : i === 2 ? 28 : 0}
+              y={12}
+            >
               <AnimatedLine className="h-px w-full bg-sketch" />
               <span className="mt-6 block font-serif text-4xl text-gold">
                 {step.number}

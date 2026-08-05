@@ -20,6 +20,8 @@ export function Audience() {
             as="div"
             className="grid border-t border-sketch"
             targets="[data-audience-item]"
+            x={-28}
+            y={0}
           >
             {audience.map((item, i) => (
               <div

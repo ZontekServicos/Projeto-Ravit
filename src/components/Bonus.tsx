@@ -17,6 +17,8 @@ export function Bonus() {
         as="div"
         className="mt-14 grid gap-px border-t border-sketch sm:grid-cols-2"
         targets="[data-bonus]"
+        x={-24}
+        y={0}
       >
         {bonusItems.map((item, i) => (
           <div

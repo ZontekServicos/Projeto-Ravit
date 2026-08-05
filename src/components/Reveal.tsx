@@ -6,6 +6,8 @@ type RevealProps = {
   as?: ElementType
   className?: string
   y?: number
+  /** Lateral offset (px): negative slides in from the left, positive from the right. */
+  x?: number
   delay?: number
   /** Selector for children to stagger-reveal individually instead of the container as a whole. */
   targets?: string
@@ -17,10 +19,11 @@ export function Reveal({
   as: Tag = "div",
   className,
   y,
+  x,
   delay,
   targets,
 }: RevealProps) {
-  const ref = useReveal<HTMLElement>({ y, delay, targets })
+  const ref = useReveal<HTMLElement>({ y, x, delay, targets })
   return (
     <Tag ref={ref} className={className}>
       {children}

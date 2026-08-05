@@ -3,6 +3,8 @@ import { DURATION, EASE, gsap, prefersReducedMotion } from "@/lib/motion"
 
 type RevealOptions = {
   y?: number
+  /** Lateral offset (px). Negative slides in from the left, positive from the right. 0 by default — opt in per section. */
+  x?: number
   delay?: number
   /** Selector, relative to the container, of children to stagger. Omit to animate the container itself. */
   targets?: string
@@ -10,11 +12,15 @@ type RevealOptions = {
 }
 
 /**
- * Fades + lifts an element (or its children) into place once it enters the viewport.
+ * Fades + lifts (and optionally slides laterally) an element — or its
+ * children — into place as it enters the viewport, and reverses the same
+ * movement back out if the user scrolls back past it. Mirrors the
+ * architectural maquette's own build/un-build behavior on scroll-back.
  * No-ops to the resting state immediately when prefers-reduced-motion is set.
  */
 export function useReveal<T extends HTMLElement>({
   y = 24,
+  x = 0,
   delay = 0,
   targets,
   stagger = 0.08,
@@ -31,14 +37,15 @@ export function useReveal<T extends HTMLElement>({
     if (nodes.length === 0) return
 
     if (prefersReducedMotion()) {
-      gsap.set(nodes, { opacity: 1, y: 0 })
+      gsap.set(nodes, { opacity: 1, x: 0, y: 0 })
       return
     }
 
     const ctx = gsap.context(() => {
-      gsap.set(nodes, { opacity: 0, y })
+      gsap.set(nodes, { opacity: 0, x, y })
       gsap.to(nodes, {
         opacity: 1,
+        x: 0,
         y: 0,
         duration: DURATION,
         delay,
@@ -47,13 +54,13 @@ export function useReveal<T extends HTMLElement>({
         scrollTrigger: {
           trigger: el,
           start: "top 85%",
-          once: true,
+          toggleActions: "play reverse play reverse",
         },
       })
     }, el)
 
     return () => ctx.revert()
-  }, [targets, y, delay, stagger])
+  }, [targets, x, y, delay, stagger])
 
   return ref
 }
@@ -69,7 +76,8 @@ const CLIP_OPEN = "inset(0 0 0 0)"
 /**
  * Wipes an element into view via clip-path instead of opacity — a mask
  * reveal, distinct from useReveal's fade/lift. "down" sweeps a heading in
- * top-to-bottom; "right" wipes an image in left-to-right.
+ * top-to-bottom; "right" wipes an image in left-to-right. Reverses the
+ * wipe if the user scrolls back past the trigger point.
  */
 type ClipRevealOptions = {
   direction?: ClipDirection
@@ -98,7 +106,11 @@ export function useClipReveal<T extends HTMLElement>({
         duration: 0.9,
         delay,
         ease: EASE,
-        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        scrollTrigger: {
+          trigger: el,
+          start: "top 85%",
+          toggleActions: "play reverse play reverse",
+        },
       })
     }, el)
 
@@ -108,7 +120,10 @@ export function useClipReveal<T extends HTMLElement>({
   return ref
 }
 
-/** Draws a horizontal divider line (scaleX 0 → 1) as it enters the viewport. */
+/**
+ * Draws a horizontal divider line (scaleX 0 → 1) as it enters the
+ * viewport, and un-draws it if the user scrolls back past it.
+ */
 export function useLineReveal<T extends HTMLElement>() {
   const ref = useRef<T | null>(null)
 
@@ -130,7 +145,7 @@ export function useLineReveal<T extends HTMLElement>() {
         scrollTrigger: {
           trigger: el,
           start: "top 90%",
-          once: true,
+          toggleActions: "play reverse play reverse",
         },
       })
     }, el)
