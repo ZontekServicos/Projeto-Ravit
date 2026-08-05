@@ -1,8 +1,11 @@
+import portrait from "@/imports/instructor-portrait.jpeg"
 import { Reveal } from "@/components/Reveal"
 import { SectionLabel } from "@/components/SectionLabel"
 
-// TODO(cliente): confirmar nome, formação e foto da professora antes do
-// lançamento. A legenda abaixo é intencionalmente genérica até então.
+// TODO(cliente): confirmar nome, formação e foto definitiva da professora
+// antes do lançamento. A legenda abaixo é intencionalmente genérica até
+// então. A foto usada é recortada da arte de marca original — vale
+// substituir por um retrato dedicado quando disponível.
 export function Instructor() {
   return (
     <section
@@ -13,20 +16,36 @@ export function Instructor() {
         <div className="lg:col-span-3">
           <SectionLabel tone="light">06 — SOBRE A PROFESSORA</SectionLabel>
         </div>
-        <Reveal as="div" className="lg:col-span-8">
-          <p className="font-serif text-4xl leading-[.94] tracking-[-.045em] sm:text-6xl">
-            "Ensinar Revit é ensinar a enxergar o projeto como um sistema — sem
-            perder a delicadeza da arquitetura."
-          </p>
-          <div className="mt-12 flex items-center gap-5 border-t border-cream/30 pt-5">
-            <span aria-hidden="true" className="h-9 w-9 border border-gold" />
-            <p className="text-[10px] leading-5 tracking-[.12em] text-paper uppercase">
-              Professora especialista em arquitetura e BIM
-              <br />
-              Uma experiência pensada para a prática profissional.
+        <div className="grid grid-cols-[96px_1fr] gap-6 sm:grid-cols-[160px_1fr] sm:gap-10 lg:col-span-9 lg:gap-14">
+          <Reveal
+            as="figure"
+            className="relative aspect-[1/3.1] overflow-hidden"
+          >
+            <img
+              src={portrait}
+              alt="Professora do Curso Revit"
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover object-right sepia-[.1]"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-ink/10 mix-blend-multiply"
+            />
+          </Reveal>
+          <Reveal as="div">
+            <p className="font-serif text-2xl leading-[1.05] tracking-[-.03em] sm:text-4xl sm:leading-[.94] sm:tracking-[-.045em] lg:text-6xl">
+              "Ensinar Revit é ensinar a enxergar o projeto como um sistema —
+              sem perder a delicadeza da arquitetura."
             </p>
-          </div>
-        </Reveal>
+            <div className="mt-12 border-t border-cream/30 pt-5">
+              <p className="text-[10px] leading-5 tracking-[.12em] text-paper uppercase">
+                Professora especialista em arquitetura e BIM
+                <br />
+                Uma experiência pensada para a prática profissional.
+              </p>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   )
