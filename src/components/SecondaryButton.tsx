@@ -20,7 +20,7 @@ export function SecondaryButton({
   return (
     <a
       {...anchorProps}
-      className={`focus-ring inline-flex items-center border-b py-3.5 text-[11px] font-semibold tracking-[.08em] transition-opacity duration-150 hover:opacity-70 ${TONES[tone]} ${className}`}
+      className={`focus-ring inline-flex items-center border-b py-3.5 text-[11px] font-semibold tracking-[.08em] transition-[opacity,transform] duration-150 hover:opacity-70 active:scale-[0.98] ${TONES[tone]} ${className}`}
     >
       {children}
     </a>

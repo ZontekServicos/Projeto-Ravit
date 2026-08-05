@@ -23,11 +23,18 @@ export function FaqItem({
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={panelId}
-        className="focus-ring flex w-full items-center justify-between py-5 text-left text-sm font-medium"
+        className="focus-ring group flex w-full items-center justify-between py-5 text-left text-sm font-medium"
       >
-        <span>{question}</span>
-        <span className="ml-6 text-xl font-light" aria-hidden="true">
-          {open ? "−" : "+"}
+        <span className="transition-colors duration-200 group-hover:text-brown">
+          {question}
+        </span>
+        <span
+          className={`ml-6 text-xl font-light transition-transform duration-200 ${
+            open ? "rotate-45" : "rotate-0"
+          }`}
+          aria-hidden="true"
+        >
+          +
         </span>
       </button>
       {open && (
@@ -35,7 +42,7 @@ export function FaqItem({
           id={panelId}
           role="region"
           aria-labelledby={id}
-          className="max-w-2xl pb-6 text-sm leading-7 text-brown"
+          className="faq-in max-w-2xl pb-6 text-sm leading-7 text-brown"
         >
           {answer}
         </p>

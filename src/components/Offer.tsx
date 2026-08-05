@@ -1,4 +1,4 @@
-import { Reveal } from "@/components/Reveal"
+import { Reveal, RevealTitle } from "@/components/Reveal"
 import { PrimaryButton } from "@/components/PrimaryButton"
 import { SectionLabel } from "@/components/SectionLabel"
 
@@ -20,9 +20,9 @@ export function Offer() {
       <div className="mx-auto grid max-w-[1248px] gap-12 lg:grid-cols-2">
         <div>
           <SectionLabel>09 — MATRÍCULAS</SectionLabel>
-          <h2 className="font-serif text-5xl leading-[.84] tracking-[-.06em] sm:text-7xl">
+          <RevealTitle className="font-serif text-5xl leading-[.84] tracking-[-.06em] sm:text-7xl">
             Seu próximo projeto <em className="font-normal">começa aqui.</em>
-          </h2>
+          </RevealTitle>
         </div>
         <Reveal as="div" className="border-t border-sketch pt-6">
           <div className="space-y-4 text-sm">

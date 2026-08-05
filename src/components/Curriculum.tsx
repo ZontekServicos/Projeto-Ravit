@@ -1,6 +1,6 @@
 import { modules } from "@/content"
 import { CourseModule } from "@/components/CourseModule"
-import { Reveal } from "@/components/Reveal"
+import { Reveal, RevealTitle } from "@/components/Reveal"
 import { SectionLabel } from "@/components/SectionLabel"
 
 export function Curriculum() {
@@ -11,10 +11,10 @@ export function Curriculum() {
     >
       <SectionLabel>03 — O QUE VOCÊ VAI APRENDER</SectionLabel>
       <div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-        <h2 className="max-w-2xl font-serif text-5xl leading-[.86] tracking-[-.055em] sm:text-7xl">
+        <RevealTitle className="max-w-2xl font-serif text-5xl leading-[.86] tracking-[-.055em] sm:text-7xl">
           Um método para levar ideias{" "}
           <em className="font-normal">até a obra.</em>
-        </h2>
+        </RevealTitle>
         <p className="max-w-xs text-sm leading-7 text-brown">
           Seis módulos conectados por um mesmo objetivo: dar clareza ao seu
           processo de projeto.

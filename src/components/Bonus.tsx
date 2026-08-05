@@ -1,5 +1,5 @@
 import { bonusItems } from "@/content"
-import { Reveal } from "@/components/Reveal"
+import { Reveal, RevealTitle } from "@/components/Reveal"
 import { SectionLabel } from "@/components/SectionLabel"
 
 // TODO(cliente): confirmar bônus reais do curso antes do lançamento.
@@ -10,9 +10,9 @@ export function Bonus() {
       className="mx-auto max-w-[1440px] border-t border-line px-5 py-20 sm:px-12 sm:py-28 lg:px-24"
     >
       <SectionLabel>08 — BÔNUS</SectionLabel>
-      <h2 className="max-w-2xl font-serif text-5xl leading-[.86] tracking-[-.055em] sm:text-6xl">
+      <RevealTitle className="max-w-2xl font-serif text-5xl leading-[.86] tracking-[-.055em] sm:text-6xl">
         Vantagens <em className="font-normal text-gold">exclusivas.</em>
-      </h2>
+      </RevealTitle>
       <Reveal
         as="div"
         className="mt-14 grid gap-px border-t border-sketch sm:grid-cols-2"

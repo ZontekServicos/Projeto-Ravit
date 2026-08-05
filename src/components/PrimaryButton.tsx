@@ -26,12 +26,14 @@ export function PrimaryButton({
   return (
     <a
       {...anchorProps}
-      className={`focus-ring inline-flex items-center justify-between gap-6 px-6 py-4 text-[11px] font-semibold tracking-[.08em] transition-colors duration-150 ${TONES[tone]} ${
+      className={`focus-ring group inline-flex items-center justify-between gap-6 px-6 py-4 text-[11px] font-semibold tracking-[.08em] transition-[background-color,transform] duration-150 active:scale-[0.98] ${TONES[tone]} ${
         full ? "w-full" : ""
       } ${className}`}
     >
       {children}
-      {arrow && <Arrow />}
+      {arrow && (
+        <Arrow className="transition-transform duration-150 group-hover:translate-x-0.5" />
+      )}
     </a>
   )
 }

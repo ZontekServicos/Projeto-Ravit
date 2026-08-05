@@ -1,3 +1,4 @@
+import { RMark } from "@/components/icons"
 import { Reveal } from "@/components/Reveal"
 import { PrimaryButton } from "@/components/PrimaryButton"
 
@@ -7,6 +8,10 @@ export function CtaBanner() {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-25 [background-image:linear-gradient(#d9d0c633_1px,transparent_1px),linear-gradient(90deg,#d9d0c633_1px,transparent_1px)] [background-size:72px_72px]"
+      />
+      <RMark
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-[18%] -right-[6%] h-[130%] w-auto text-cream/[.05]"
       />
       <Reveal
         as="div"

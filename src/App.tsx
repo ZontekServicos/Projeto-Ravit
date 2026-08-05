@@ -6,6 +6,7 @@ import { Faq } from "@/components/Faq"
 import { Footer } from "@/components/Footer"
 import { Header } from "@/components/Header"
 import { Hero } from "@/components/Hero"
+import { HeroTransition } from "@/components/HeroTransition"
 import { Instructor } from "@/components/Instructor"
 import { Methodology } from "@/components/Methodology"
 import { Offer } from "@/components/Offer"
@@ -19,6 +20,7 @@ export default function App() {
     <main className="overflow-x-hidden bg-paper pb-20 font-sans text-ink md:pb-0">
       <Header />
       <Hero />
+      <HeroTransition />
       <Transformation />
       <Audience />
       <Curriculum />

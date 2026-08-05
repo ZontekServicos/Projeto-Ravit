@@ -1,5 +1,5 @@
 import { methodology } from "@/content"
-import { AnimatedLine, Reveal } from "@/components/Reveal"
+import { AnimatedLine, Reveal, RevealTitle } from "@/components/Reveal"
 import { SectionLabel } from "@/components/SectionLabel"
 
 export function Methodology() {
@@ -10,9 +10,9 @@ export function Methodology() {
     >
       <div className="mx-auto max-w-[1248px]">
         <SectionLabel>05 — METODOLOGIA</SectionLabel>
-        <h2 className="max-w-2xl font-serif text-5xl leading-[.86] tracking-[-.055em] sm:text-6xl">
+        <RevealTitle className="max-w-2xl font-serif text-5xl leading-[.86] tracking-[-.055em] sm:text-6xl">
           Três etapas, <em className="font-normal text-brown">um só método.</em>
-        </h2>
+        </RevealTitle>
 
         <div className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-3">
           {methodology.map((step) => (

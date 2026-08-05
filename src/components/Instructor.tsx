@@ -1,5 +1,5 @@
 import portrait from "@/imports/instructor-portrait.jpeg"
-import { Reveal } from "@/components/Reveal"
+import { Reveal, RevealImage } from "@/components/Reveal"
 import { SectionLabel } from "@/components/SectionLabel"
 
 // TODO(cliente): confirmar nome, formação e foto definitiva da professora
@@ -17,10 +17,7 @@ export function Instructor() {
           <SectionLabel tone="light">06 — SOBRE A PROFESSORA</SectionLabel>
         </div>
         <div className="grid grid-cols-[96px_1fr] gap-6 sm:grid-cols-[160px_1fr] sm:gap-10 lg:col-span-9 lg:gap-14">
-          <Reveal
-            as="figure"
-            className="relative aspect-[1/3.1] overflow-hidden"
-          >
+          <RevealImage className="relative aspect-[1/3.1] overflow-hidden">
             <img
               src={portrait}
               alt="Professora do Curso Revit"
@@ -31,7 +28,7 @@ export function Instructor() {
               aria-hidden="true"
               className="absolute inset-0 bg-ink/10 mix-blend-multiply"
             />
-          </Reveal>
+          </RevealImage>
           <Reveal as="div">
             <p className="font-serif text-2xl leading-[1.05] tracking-[-.03em] sm:text-4xl sm:leading-[.94] sm:tracking-[-.045em] lg:text-6xl">
               "Ensinar Revit é ensinar a enxergar o projeto como um sistema —

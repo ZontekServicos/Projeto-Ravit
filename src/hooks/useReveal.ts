@@ -58,6 +58,56 @@ export function useReveal<T extends HTMLElement>({
   return ref
 }
 
+type ClipDirection = "down" | "right"
+
+const CLIP_START: Record<ClipDirection, string> = {
+  down: "inset(0% 0 100% 0)",
+  right: "inset(0 100% 0% 0)",
+}
+const CLIP_OPEN = "inset(0 0 0 0)"
+
+/**
+ * Wipes an element into view via clip-path instead of opacity — a mask
+ * reveal, distinct from useReveal's fade/lift. "down" sweeps a heading in
+ * top-to-bottom; "right" wipes an image in left-to-right.
+ */
+type ClipRevealOptions = {
+  direction?: ClipDirection
+  delay?: number
+}
+
+export function useClipReveal<T extends HTMLElement>({
+  direction = "down",
+  delay = 0,
+}: ClipRevealOptions = {}) {
+  const ref = useRef<T | null>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    if (prefersReducedMotion()) {
+      gsap.set(el, { clipPath: CLIP_OPEN })
+      return
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(el, { clipPath: CLIP_START[direction] })
+      gsap.to(el, {
+        clipPath: CLIP_OPEN,
+        duration: 0.9,
+        delay,
+        ease: EASE,
+        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+      })
+    }, el)
+
+    return () => ctx.revert()
+  }, [direction, delay])
+
+  return ref
+}
+
 /** Draws a horizontal divider line (scaleX 0 → 1) as it enters the viewport. */
 export function useLineReveal<T extends HTMLElement>() {
   const ref = useRef<T | null>(null)
