@@ -3,9 +3,38 @@
 @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('https://static.figma.com/font/CormorantGaramond_wght__1') format('woff2'); }
 @font-face { font-family: 'Manrope'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('https://static.figma.com/font/Manrope_wght__1') format('woff2'); }
 
-@theme { --font-sans: 'Manrope', sans-serif; --font-serif: 'Cormorant Garamond', Georgia, serif; }
+/* Brand tokens. Tailwind v4 auto-generates color utilities (bg-ink,
+   text-gold/70, border-sketch, etc.) from every --color- entry below.
+   Keep hex values confined to this block; components reference the
+   token names, not raw hex. */
+@theme {
+  --font-sans: 'Manrope', sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --color-ink: #4A3728;
+  --color-brown: #7D5E42;
+  --color-soft: #9E7D5E;
+  --color-gold: #B89060;
+  --color-paper: #EFE9E2;
+  --color-cream: #FAF7F4;
+  --color-sketch: #C8BEB4;
+  --color-line: #D9D0C6;
+}
 
-:root { --ink:#4A3728; --brown:#7D5E42; --gold:#B89060; --paper:#EFE9E2; --cream:#FAF7F4; --line:#D9D0C6; --sketch:#C8BEB4; }
 html { scroll-behavior:smooth; }
-body { background:var(--paper); color:var(--ink); }
-::selection { background:#b8906050; }
+body { background:var(--color-paper); color:var(--color-ink); }
+::selection { background: color-mix(in srgb, var(--color-gold) 32%, transparent); }
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior:auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

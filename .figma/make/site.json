@@ -1,10 +1,15 @@
 {
-  "description": "This web application allows users to create and customize course pages with a main image and logo, enhancing the visual appeal and branding for educational content.",
+  "title": "Curso Revit — Do Básico ao Projeto Completo",
+  "description": "Curso online de Revit para arquitetos, estudantes de arquitetura e designers de interiores: do básico à documentação de um projeto completo, com aulas práticas e objetivas.",
+  "language": "pt-BR",
+  "icons": {
+    "icon": "/favicon.svg"
+  },
   "robots": {
     "index": false
   },
   "accessibility": {
-    "addBypassLinks": false,
+    "addBypassLinks": true,
     "ignoreReducedMotion": false
   }
 }
