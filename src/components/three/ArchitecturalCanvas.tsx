@@ -46,10 +46,14 @@ export function ArchitecturalCanvas({ onError }: ArchitecturalCanvasProps) {
 
     let renderer: THREE.WebGLRenderer
     try {
+      // MSAA measurably contributes to scroll-time jank on this
+      // line-heavy scene (profiled: ~40% fewer sub-30fps frames with it
+      // off) — the devicePixelRatio cap below already smooths edges
+      // enough at this maquette's on-screen scale.
       renderer = new THREE.WebGLRenderer({
-        antialias: !isMobile,
+        antialias: false,
         alpha: true,
-        powerPreference: "low-power",
+        powerPreference: "default",
       })
     } catch {
       onErrorRef.current?.()
@@ -164,17 +168,38 @@ export function ArchitecturalCanvas({ onError }: ArchitecturalCanvasProps) {
     maquete.add(wireframe)
     boxGeo.dispose()
 
+    // Three.js compiles each material's shader lazily, the first time it
+    // actually renders with opacity > 0. Left alone, that means 3-4 GPU
+    // shader compiles (each genuinely tens of ms, sometimes much more on
+    // weaker/integrated GPUs) all land bunched together right as the
+    // build timeline fades pieces in mid-scroll — a real, measured cause
+    // of the stutter: profiling showed WebGL program creation and a "GPU
+    // stall due to ReadPixels" driver warning clustered exactly there,
+    // traced to renderer.compile()'s synchronous getProgramInfoLog check
+    // right after each link. compileAsync uses KHR_parallel_shader_compile
+    // to poll completion instead of blocking on it, so warming every
+    // material up front — before the user has scrolled anywhere near the
+    // trigger point — doesn't itself stall the main thread either.
+    void renderer.compileAsync(scene, camera)
+
     // Idle rotation is deliberately a brief, gentle nudge rather than a
     // perpetual spin — a maquette that settles and holds still reads as
     // more considered than one that never stops turning. It only plays
     // once per "reason" (build finishing, scrolling back into view, or a
     // fresh scroll gesture), never continuously.
-    const ROTATION_SPEED = 0.00035 // rad/frame at the loop's own ~30fps cap
+    const ROTATION_SPEED = 0.00035 // rad/frame at ~60fps
     const SPIN_DURATION_MS = 3200
-    const RENDER_EVERY_N_FRAMES = 2 // caps the spin loop to ~30fps
 
+    // GSAP's scrub onUpdate can fire more than once per real animation
+    // frame while scrolling — calling renderer.render() synchronously
+    // from inside it (the original approach) queues up redundant WebGL
+    // draw calls faster than the GPU/driver can retire them, which reads
+    // as stutter/freezing during fast scroll gestures. Everything below
+    // instead sets a "dirty" flag; a single persistent rAF loop (running
+    // only while the piece is intersecting) coalesces any number of
+    // updates within a frame into at most one actual render call.
     let rafId: number | null = null
-    let frameCount = 0
+    let needsRender = false
     let spinTimeoutId: number | null = null
     let isSpinning = false
     let intersecting = false
@@ -185,21 +210,26 @@ export function ArchitecturalCanvas({ onError }: ArchitecturalCanvasProps) {
       renderer.render(scene, camera)
     }
 
-    function loop() {
-      rafId = requestAnimationFrame(loop)
-      frameCount++
-      if (frameCount % RENDER_EVERY_N_FRAMES !== 0) return
-      maquete.rotation.y += ROTATION_SPEED * RENDER_EVERY_N_FRAMES
-      renderFrame()
+    function requestRender() {
+      needsRender = true
     }
 
-    function startLoop() {
-      if (rafId === null) {
-        frameCount = 0
-        loop()
+    function frameLoop() {
+      rafId = requestAnimationFrame(frameLoop)
+      if (isSpinning) {
+        maquete.rotation.y += ROTATION_SPEED
+        needsRender = true
+      }
+      if (needsRender) {
+        needsRender = false
+        renderFrame()
       }
     }
-    function stopLoop() {
+
+    function startFrameLoop() {
+      if (rafId === null) frameLoop()
+    }
+    function stopFrameLoop() {
       if (rafId !== null) {
         cancelAnimationFrame(rafId)
         rafId = null
@@ -224,19 +254,15 @@ export function ArchitecturalCanvas({ onError }: ArchitecturalCanvasProps) {
       )
         return
       isSpinning = true
-      startLoop()
       spinTimeoutId = window.setTimeout(() => {
         isSpinning = false
         spinTimeoutId = null
-        stopLoop()
-        renderFrame()
       }, SPIN_DURATION_MS)
     }
 
     function settle() {
       isSpinning = false
       cancelSpinTimer()
-      stopLoop()
     }
 
     let ctx: ReturnType<typeof gsap.context> | null = null
@@ -255,7 +281,7 @@ export function ArchitecturalCanvas({ onError }: ArchitecturalCanvasProps) {
     } else {
       ctx = gsap.context(() => {
         function handleScrubUpdate() {
-          renderFrame()
+          requestRender()
           const progress = tl.progress()
           if (progress >= 0.995 && !buildComplete) {
             buildComplete = true
@@ -308,13 +334,17 @@ export function ArchitecturalCanvas({ onError }: ArchitecturalCanvasProps) {
         const wasIntersecting = intersecting
         intersecting = entry.isIntersecting
         if (intersecting) {
-          // Re-entering the viewport counts as a fresh reason to nudge —
-          // but only if it was actually out of view before, not on the
-          // very first observation.
-          if (wasIntersecting === false && buildComplete) beginSpinBurst()
-          else renderFrame()
+          if (!reduced) {
+            startFrameLoop()
+            requestRender()
+            // Re-entering the viewport counts as a fresh reason to nudge —
+            // but only if it was actually out of view before, not on the
+            // very first observation.
+            if (wasIntersecting === false && buildComplete) beginSpinBurst()
+          }
         } else {
           settle()
+          stopFrameLoop()
         }
       },
       { threshold: 0.05 },
@@ -350,7 +380,7 @@ export function ArchitecturalCanvas({ onError }: ArchitecturalCanvasProps) {
     resizeObserver.observe(container)
 
     return () => {
-      stopLoop()
+      stopFrameLoop()
       cancelSpinTimer()
       window.removeEventListener("scroll", onWindowScroll)
       observer.disconnect()
